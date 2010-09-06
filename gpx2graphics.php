@@ -105,14 +105,14 @@ class Gpx2GraphicsLoader {
 		$centerMap = $geo->getCenter();
 		$zoomLevel = $geo->getZoomLevel();
 	
-		$jsString = 'function initialize() {' . chr(13);
+		$jsString = 'function initialize_'.$id.'() {' . chr(13);
 	    $jsString .= 'var myLatlng = new google.maps.LatLng('.$centerMap.');' . chr(13);
 	    $jsString .= 'var myOptions = {' . chr(13);
 		$jsString .= 'zoom: '.$zoomLevel.',' . chr(13);
 		$jsString .= 'center: myLatlng,' . chr(13);
 		$jsString .= 'mapTypeId: google.maps.MapTypeId.ROADMAP' . chr(13);
 		$jsString .= '}' . chr(13);
-		$jsString .= 'var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);' . chr(13);
+		$jsString .= 'var map = new google.maps.Map(document.getElementById("map_canvas_' . $id . '"), myOptions);' . chr(13);
 
 		$jsString .= 'var ridePlanCoordinates = [' . chr(13);
 		foreach ($pointList as $point) {
@@ -128,14 +128,6 @@ class Gpx2GraphicsLoader {
 		$jsString .= 'flightPath.setMap(map);' . chr(13);
 	  	$jsString .= '}' . chr(13);
 	  
-	  	$jsString .= 'function loadScript() {' . chr(13);
-	    $jsString .= 'var script = document.createElement("script");' . chr(13);
-	    $jsString .= 'script.type = "text/javascript";' . chr(13);
-	    $jsString .= 'script.src = "http://maps.google.com/maps/api/js?sensor=false&callback=initialize&language=NL&region=NE";' . chr(13);
-	    $jsString .= 'document.body.appendChild(script);' . chr(13);
-	  	$jsString .= '}' . chr(13);
-	  	$jsString .= 'window.onload = loadScript;' . chr(13);
-	  	
 	  	$upload_dir = wp_upload_dir();
 	  	$filename = $upload_dir['path'] . '/gpx2maps_'.$id.'.js';
 		$fp = fopen($filename,'w');
@@ -158,7 +150,7 @@ class Gpx2GraphicsLoader {
 			echo '<h2>' . __( 'Gpx2Graphics - Add file', 'gpx2graphics_add_file' ) . '</h2>';
 		    echo '<div id="html-upload-ui" style="display: block;">';
 			echo '<form action="" enctype="multipart/form-data" method="post" >';
-			echo '<input type="hidden" name="MAX_FILE_SIZE" value="1000000" />';
+			echo '<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />';
 			
 			echo '<fieldset>';
 			echo '<table>';
@@ -247,8 +239,9 @@ function CheckForGpx2Graphics($content) {
 					$gpsCode = trim(str_replace(']','',$pieces[2]));
 					$sql = 'SELECT * FROM '.$wpdb->prefix.'gpx2graphics WHERE id='.$gpsCode;
 		    		$row = $wpdb->get_row($sql);
-		    		$html =  '<div id="map_canvas" style="margin-bottom: 5px;border:1px solid #000; width: '.$row->map_width.'px; height: '.$row->map_height.'px;"></div>';
+		    		$html =  '<div id="map_canvas_'.$gpsCode.'" style="margin-bottom: 5px;border:1px solid #000; width: '.$row->map_width.'px; height: '.$row->map_height.'px;"></div>';
 		    		$html .= '<script type="text/javascript" src="'.$row->public_location.'/gpx2maps_'.$gpsCode.'.js"><!-- track '.$gpsCode.'--></script>';
+		    		$html .= '<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&callback=initialize_'.$gpsCode.'&language=NL&region=NE";><!-- Maps --></script>';
 				}
 				$content = str_replace($match,$html,$content);
 			}
