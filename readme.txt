@@ -61,7 +61,7 @@ In the next version of the plugin you'll be able to change the color of the trac
 == Changelog ==
 
 = 0.2 =
-* Bugfuxing
+* Fixed bug with multiple Google Maps in 1 blogpost
 
 = 0.1 =
 * First Stable release of the plugin
