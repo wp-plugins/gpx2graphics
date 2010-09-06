@@ -1,0 +1,9 @@
+/* gpx2graphics_icon.png */
+
+li#toplevel_page_Gpx2Graphics-gpx2graphics.current div.wp-menu-image {
+	background: url('gpx2graphics_icon.png') no-repeat scroll 0px 0px;
+}
+
+li#toplevel_page_Gpx2Graphics-gpx2graphics div.wp-menu-image {
+	background: url('gpx2graphics_icon.png') no-repeat scroll 0px -33px;
+}
