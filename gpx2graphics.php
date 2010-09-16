@@ -3,7 +3,7 @@
 Plugin Name: Gpx2Graphics
 Plugin URI: http://janwillemeshuis.nl/jwe-new-media-solutions/wordpress-plugins/gpx2graphics-plugin/
 Description: Create a Google Map, Elevation image or Speed image from your (Garmin) GpX files.
-Version: 0.1
+Version: 0.3
 Author: Jan-Willem Eshuis
 Author URI: http://janwillemeshuis.nl
 License: GPL2
@@ -112,20 +112,23 @@ class Gpx2GraphicsLoader {
 		$jsString .= 'center: myLatlng,' . chr(13);
 		$jsString .= 'mapTypeId: google.maps.MapTypeId.ROADMAP' . chr(13);
 		$jsString .= '}' . chr(13);
-		$jsString .= 'var map = new google.maps.Map(document.getElementById("map_canvas_' . $id . '"), myOptions);' . chr(13);
+		$jsString .= 'var map_'.$id.' = new google.maps.Map(document.getElementById("map_canvas_' . $id . '"), myOptions);' . chr(13);
 
 		$jsString .= 'var ridePlanCoordinates = [' . chr(13);
-		foreach ($pointList as $point) {
+		for ($i=0;$i<count($pointList)-1;$i++) {
+			$point = $pointList[$i];
 			$jsString .= 'new google.maps.LatLng('.$point->getLat().','.$point->getLon().'),' . chr(13);
 		}
+		$point = $pointList[count($pointList)-1];
+		$jsString .= 'new google.maps.LatLng('.$point->getLat().','.$point->getLon().')' . chr(13);
 	    $jsString .= '];' . chr(13);
-		$jsString .= 'var flightPath = new google.maps.Polyline({' . chr(13);
+		$jsString .= 'var flightPath_'.$id.' = new google.maps.Polyline({' . chr(13);
 	    $jsString .= 'path: ridePlanCoordinates,' . chr(13);
 	    $jsString .= 'strokeColor: "#FF0000",' . chr(13);
 	    $jsString .= 'strokeOpacity: 1.0,' . chr(13);
 	    $jsString .= 'strokeWeight: 4' . chr(13);
 	    $jsString .= '});' . chr(13);
-		$jsString .= 'flightPath.setMap(map);' . chr(13);
+		$jsString .= 'flightPath_'.$id.'.setMap(map_'.$id.');' . chr(13);
 	  	$jsString .= '}' . chr(13);
 	  
 	  	$upload_dir = wp_upload_dir();
@@ -240,8 +243,8 @@ function CheckForGpx2Graphics($content) {
 					$sql = 'SELECT * FROM '.$wpdb->prefix.'gpx2graphics WHERE id='.$gpsCode;
 		    		$row = $wpdb->get_row($sql);
 		    		$html =  '<div id="map_canvas_'.$gpsCode.'" style="margin-bottom: 5px;border:1px solid #000; width: '.$row->map_width.'px; height: '.$row->map_height.'px;"></div>';
-		    		$html .= '<script type="text/javascript" src="'.$row->public_location.'/gpx2maps_'.$gpsCode.'.js"><!-- track '.$gpsCode.'--></script>';
-		    		$html .= '<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&callback=initialize_'.$gpsCode.'&language=NL&region=NE";><!-- Maps --></script>';
+		    		$html .= '<script type="text/javascript" src="'.$row->public_location.'/gpx2maps_'.$gpsCode.'.js"></script>';
+		    		$html .= '<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&callback=initialize_'.$gpsCode.'&language=NL&region=NE"></script>';
 				}
 				$content = str_replace($match,$html,$content);
 			}

@@ -4,7 +4,7 @@ Donate link: http://janwillemeshuis.nl/jwe-new-media-solutions/wordpress-plugins
 Tags: gpx, garmin, google maps
 Requires at least: 2.7.0
 Tested up to: 3.0.1
-Stable tag: 0.2
+Stable tag: 0.3
 
 Create a Google Map, Elevation image or Speed image from your (Garmin) GpX files.
 
@@ -40,6 +40,10 @@ This section describes how to install the plugin and get it working.
 
 == Upgrade Notice ==
 
+= 0.3 =
+* Fix bug with multiple Google Maps in more than 1 blogpost.
+* Fixed IE bug not writing the track on the Google Maps
+
 = 0.2 =
 * Fixed bug with multiple Google Maps in 1 blogpost
 
@@ -59,6 +63,9 @@ In the next version of the plugin you'll be able to change the color of the trac
 3. Example of the speed image
 
 == Changelog ==
+
+= 0.3 =
+* Fix bug with multiple Google Maps in more than 1 blogpost.
 
 = 0.2 =
 * Fixed bug with multiple Google Maps in 1 blogpost
